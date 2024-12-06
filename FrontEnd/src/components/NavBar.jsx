@@ -45,7 +45,7 @@ const NavBar = ({ searchData, setSearchData, userName }) => {
           </div>
         </div>
 
-        {/* Second Row - Links */}
+        {/* Links */}
         <div className="">
           <div className="flex justify-center gap-5 mt-5 py-2 text-white">
             <Link to="/" className="hover:text-gray-300">Home</Link>
