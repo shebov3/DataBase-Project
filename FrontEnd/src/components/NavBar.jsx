@@ -30,7 +30,7 @@ const NavBar = ({ searchData, setSearchData, userName }) => {
             ) : (
               <Link
                 to="/login"
-                className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+                className="bg-[rgb(149,171,82)] text-white px-4 py-2 rounded-lg hover:bg-blue-600"
               >
                 Sign In
               </Link>
