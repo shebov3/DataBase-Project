@@ -53,6 +53,7 @@ const NavBar = ({ searchData, setSearchData, userName }) => {
             <Link to="/PlayStation 4" className="hover:text-gray-300">PlayStation 4</Link>
             <Link to="/PlayStation 3" className="hover:text-gray-300">PlayStation 3</Link>
             <Link to="/Switch" className="hover:text-gray-300">Switch</Link>
+            <Link to="/Games" className="hover:text-gray-300">All Games</Link>
           </div>
         </div>
       </nav>
