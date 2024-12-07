@@ -6,7 +6,7 @@ const Card = ({ image, title, description, price, onClick }) => {
       <img className="w-full h-64 object-cover" src={image} alt={title} />
       
       <div className="px-6 py-4">
-        <div className="font-bold text-xl mb-2 text-white">{title}</div>
+        <div className="font-bold text-xl mb-2 text-[rgb(149,171,82)]">{title}</div>
         
         <p className="text-base text-gray-200 ">{description}</p>
 

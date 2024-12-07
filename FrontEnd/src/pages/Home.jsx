@@ -36,7 +36,7 @@ const Home = ({ setGameId, gameId }) => {
   return (
     <>
       <div className="flex justify-center mt-4">
-        <Slider className="w-[50rem] cursor-pointer" {...settings}>
+        <Slider className="w-[60rem] cursor-pointer" {...settings}>
           {data.map((game) => (
             <div key={game.ProductId} className="">
               <img
@@ -51,13 +51,13 @@ const Home = ({ setGameId, gameId }) => {
         </Slider>
       </div>
       <div>
-        <Category title = "Under 500 EGP"/>
+        <Category sort = "Price" title = "Under 500 EGP"/>
       </div>
       <div>
-        <Category title = "Action" />
+        <Category sort = "Category" title = "Action" />
       </div>
       <div>
-        <Category title = "Adventure" />
+        <Category sort = "Category" title = "Adventure" />
       </div>
     </>
     

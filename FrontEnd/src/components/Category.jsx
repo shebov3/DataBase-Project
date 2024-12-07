@@ -2,11 +2,17 @@ import { useState, useEffect } from 'react';
 import Card from './Card';
 import axios from "axios";
 
-const Categories = ({ title }) => {
+const Categories = ({ sort, title }) => {
   const [sortedData, setData] = useState([]);
   
   const getSortedData = async () => {
-    if (title === 'Under 500 EGP') {
+    if (title === 'All Games') {
+      const data = await axios.get(
+        `http://localhost:3000/api/v1/products`
+      );
+      return data.data.games
+    }
+    else if (title === 'Under 500 EGP') {
       const data = await axios.get(
         `http://localhost:3000/api/v1/products`
       );
@@ -14,7 +20,7 @@ const Categories = ({ title }) => {
       return data.data.games.filter((item)=>item.Price <= 500)
     }else{
       const data = await axios.get(
-        `http://localhost:3000/api/v1/products?category=${title}`
+        `http://localhost:3000/api/v1/products?${sort}=${title}`
       );
       return data.data.games
     }

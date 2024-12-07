@@ -3,14 +3,41 @@ const { StatusCodes } = require('http-status-codes')
 const dbConnect = require('../db/dbconfig')
 
 const getAllGames = async (req, res) => {
-  const category = req.query.category
+  const query = req.query
+  queryKeys = Object.keys(query).length > 0 ? Object.keys(query) : null
   try {
     const db = await dbConnect;
-    const categoryId = category? await db.request()
-    .input('Category', category)
-    .query(`SELECT * FROM Category WHERE Name = @Category`) : null
-    const result = await db.request().query(`SELECT * FROM product ${categoryId?.recordset? `WHERE CategoryId = ${categoryId.recordset[0].CategoryId}`:''}`);
-    res.status(StatusCodes.OK).json({games: result.recordset});
+    if (queryKeys){
+      if (queryKeys[0] == 'Category'){
+        const categoryId = await db.request()
+        .input('Category', Object.values(query)[0])
+        .query(`SELECT * FROM Category WHERE Name = @Category`)
+  
+        const result = await db.request()
+        .input('CategoryId', categoryId.recordset[0].CategoryId)
+        .query(`SELECT * FROM product WHERE CategoryId = @CategoryId`);
+  
+        res.status(StatusCodes.OK).json({games: result.recordset});
+      }
+      else if (queryKeys[0] == 'Name'){  
+        const result = await db.request()
+        .input('Name', '%' + Object.values(query)[0] + '%')
+        .query(`SELECT * FROM product WHERE Name LIKE @Name`);
+        res.status(StatusCodes.OK).json({games: result.recordset});
+      }
+    }
+    else{
+      const request = db.request()
+    
+      const result = queryKeys? await request
+      .input('QueryValue', Object.values(query)[0])
+      .query(`SELECT * FROM product WHERE ${queryKeys[0]} = @QueryValue`)
+      : await request.query(`SELECT * FROM product`)
+  
+      res.status(StatusCodes.OK).json({games: result.recordset});
+    }
+    
+
   } catch (err) {
     console.error("Error querying the database: ", err);
     throw new CustomAPIError('Error querying the database', StatusCodes.BAD_REQUEST)
