@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const PlayStation5 = ({ searchData, setSearchData, userName }) => {
+const PlayStation5 = ({ searchData, setSearchData }) => {
   return (
     <>
       <h1>PlayStation 5 games</h1>
