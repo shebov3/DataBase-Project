@@ -17,7 +17,7 @@ const Card = ({ image, title, description, price, onClick }) => {
         {onClick && (
           <button
             onClick={onClick}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 rounded hover:scale-110 transform transition-all duration-200"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold px-8 rounded hover:scale-110 transform transition-all duration-200"
           >
             Add To Cart
           </button>
