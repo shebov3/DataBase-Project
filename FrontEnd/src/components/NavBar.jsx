@@ -49,11 +49,11 @@ const NavBar = ({ searchData, setSearchData, userName }) => {
         <div className="">
           <div className="flex justify-center gap-5 mt-5 py-2 text-white">
             <Link to="/" className="hover:text-gray-300">Home</Link>
-            <Link to="/PlayStation 5" className="hover:text-gray-300">PlayStation 5</Link>
-            <Link to="/PlayStation 4" className="hover:text-gray-300">PlayStation 4</Link>
-            <Link to="/PlayStation 3" className="hover:text-gray-300">PlayStation 3</Link>
-            <Link to="/Switch" className="hover:text-gray-300">Switch</Link>
-            <Link to="/Games" className="hover:text-gray-300">All Games</Link>
+            <Link to="/Products/PS5" className="hover:text-gray-300">PlayStation 5</Link>
+            <Link to="/Products/PS4" className="hover:text-gray-300">PlayStation 4</Link>
+            <Link to="/Products/PS3" className="hover:text-gray-300">PlayStation 3</Link>
+            <Link to="/Products/Switch" className="hover:text-gray-300">Switch</Link>
+            <Link to="/Games/AllGames" className="hover:text-gray-300">All Games</Link>
           </div>
         </div>
       </nav>

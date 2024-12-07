@@ -6,7 +6,7 @@ const Categories = ({ sort, title }) => {
   const [sortedData, setData] = useState([]);
   
   const getSortedData = async () => {
-    if (title === 'All Games') {
+    if (title === 'AllGames') {
       const data = await axios.get(
         `http://localhost:3000/api/v1/products`
       );

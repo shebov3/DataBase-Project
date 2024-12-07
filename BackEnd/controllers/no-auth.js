@@ -5,6 +5,7 @@ const dbConnect = require('../db/dbconfig')
 const getAllGames = async (req, res) => {
   const query = req.query
   queryKeys = Object.keys(query).length > 0 ? Object.keys(query) : null
+  console.log(queryKeys[0], Object.values(query)[0])
   try {
     const db = await dbConnect;
     if (queryKeys){
@@ -24,19 +25,20 @@ const getAllGames = async (req, res) => {
         .input('Name', '%' + Object.values(query)[0] + '%')
         .query(`SELECT * FROM product WHERE Name LIKE @Name`);
         res.status(StatusCodes.OK).json({games: result.recordset});
+      }else{
+        const request = db.request()
+        const result = await request
+        .input('QueryValue', Object.values(query)[0])
+        .query(`SELECT * FROM product WHERE ${queryKeys[0]} = @QueryValue`)
+
+        res.status(StatusCodes.OK).json({games: result.recordset});
       }
-    }
-    else{
+    }else{
       const request = db.request()
-    
-      const result = queryKeys? await request
-      .input('QueryValue', Object.values(query)[0])
-      .query(`SELECT * FROM product WHERE ${queryKeys[0]} = @QueryValue`)
-      : await request.query(`SELECT * FROM product`)
-  
+      const result = await request.query(`SELECT * FROM product`)
       res.status(StatusCodes.OK).json({games: result.recordset});
     }
-    
+
 
   } catch (err) {
     console.error("Error querying the database: ", err);
