@@ -11,8 +11,6 @@ import "slick-carousel/slick/slick-theme.css";
 
 const Home = ({ setGameId, gameId }) => {
   const [data, setData] = useState([]);
-  
-  
   useEffect(() => {
       const getData = async () => {
         const data = await axios.get(

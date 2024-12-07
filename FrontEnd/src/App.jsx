@@ -5,11 +5,11 @@ import Home from './pages/Home'
 import ShowNavBar from './components/ShowNavBar'
 import NavBar from './components/NavBar'
 import Products from './pages/Products'
+import ReloadOnRouteChange from './components/ReloadOnRouteChange'
 
 
 
 function App() {
-  const navigate = useNavigate()
   const { searchData, setSearchData, gameId, setGameId, userName, setUserName } = useGlobalContext();
 
   return (

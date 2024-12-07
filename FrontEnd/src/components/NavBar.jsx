@@ -1,5 +1,6 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
+import logo from '../images/Logo.png';
 
 
 const NavBar = ({ searchData, setSearchData, userName }) => {
@@ -8,9 +9,9 @@ const NavBar = ({ searchData, setSearchData, userName }) => {
   return (
     <>
       <nav className="bg-[rgb(28,34,52)] shadow-lg">
-        <div className="max-w-screen-xl mx-auto flex justify-between items-center h-[70px] px-4 lg:px-8">
+        <div className="mx-auto flex justify-between items-center h-[70px] px-4 lg:px-20">
           <div className="text-xl text-white font-semibold">
-            <Link to="/">Logo</Link>
+            <Link to="/"><img className="w-10" src={logo} /></Link>
           </div>
           <div className="flex-grow mx-4 outline-none">
             <input
@@ -39,7 +40,8 @@ const NavBar = ({ searchData, setSearchData, userName }) => {
             {/* Cart Button */}
             <Link to="/cart" className="text-gray-600 hover:text-gray-900">
               <button className="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300">
-              <i className="fa-regular fa-cart-shopping"></i>
+                <i className="fa-solid fa-cart-shopping"></i>
+
               </button>
             </Link>
           </div>
@@ -53,7 +55,7 @@ const NavBar = ({ searchData, setSearchData, userName }) => {
             <Link to="/Products/PS4" className="hover:text-gray-300">PlayStation 4</Link>
             <Link to="/Products/PS3" className="hover:text-gray-300">PlayStation 3</Link>
             <Link to="/Products/Switch" className="hover:text-gray-300">Switch</Link>
-            <Link to="/Games/AllGames" className="hover:text-gray-300">All Games</Link>
+            <Link to="/Products/AllGames" className="hover:text-gray-300">All Games</Link>
           </div>
         </div>
       </nav>

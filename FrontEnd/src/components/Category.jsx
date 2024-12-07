@@ -4,31 +4,30 @@ import axios from "axios";
 
 const Categories = ({ sort, title }) => {
   const [sortedData, setData] = useState([]);
+  useEffect(() => {
+    const getSortedData = async () => {
+      if (title === 'AllGames') {
+        const data = await axios.get(
+          `http://localhost:3000/api/v1/products`
+        );
+        setData(data.data.games)
+      }
+      else if (title === 'Under 500 EGP') {
+        const data = await axios.get(
+          `http://localhost:3000/api/v1/products`
+        );
   
-  const getSortedData = async () => {
-    if (title === 'AllGames') {
-      const data = await axios.get(
-        `http://localhost:3000/api/v1/products`
-      );
-      return data.data.games
-    }
-    else if (title === 'Under 500 EGP') {
-      const data = await axios.get(
-        `http://localhost:3000/api/v1/products`
-      );
+        setData(data.data.games.filter((item)=>item.Price <= 500))
+      }else{
+        const data = await axios.get(
+          `http://localhost:3000/api/v1/products?${sort}=${title}`
+        );
+        setData(data.data.games)
+      }
+    };
 
-      return data.data.games.filter((item)=>item.Price <= 500)
-    }else{
-      const data = await axios.get(
-        `http://localhost:3000/api/v1/products?${sort}=${title}`
-      );
-      return data.data.games
-    }
-  };
-
-  useEffect(async () => {
-    setData( await getSortedData());
-  }, [title]) 
+    getSortedData()
+  }, [sort, title]) 
 
   return (
     <div className="container mx-auto px-10 py-8">

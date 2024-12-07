@@ -5,7 +5,6 @@ const dbConnect = require('../db/dbconfig')
 const getAllGames = async (req, res) => {
   const query = req.query
   queryKeys = Object.keys(query).length > 0 ? Object.keys(query) : null
-  console.log(queryKeys[0], Object.values(query)[0])
   try {
     const db = await dbConnect;
     if (queryKeys){
