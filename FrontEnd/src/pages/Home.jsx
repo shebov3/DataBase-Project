@@ -35,22 +35,29 @@ const Home = ({ setGameId, gameId }) => {
 
   return (
     <>
-      {/* <Category title = "Action" items = {cardData}/>
-      <Category title = "Adventure" items = {cardData}/>
-      <Category title = "RPG" items = {cardData}/> */}
       <div className="flex justify-center mt-4">
-        <Slider className="w-[50rem]" {...settings}>
+        <Slider className="w-[50rem] cursor-pointer" {...settings}>
           {data.map((game) => (
             <div key={game.ProductId} className="">
               <img
+              // change to games.Img
                 src={"https://via.placeholder.com/600x300"}
                 alt={game.Name}
                 className="w-full h-auto rounded-lg"
               />
-              <h3 className="text-center text-lg font-medium mt-2">{game.Name}</h3>
+              <h3 className="text-center text-lg font-medium mt-2 text-[rgb(149,171,82)]">{game.Name}</h3>
             </div>
           ))}
         </Slider>
+      </div>
+      <div>
+        <Category title = "Under 500 EGP"/>
+      </div>
+      <div>
+        <Category title = "Action" />
+      </div>
+      <div>
+        <Category title = "Adventure" />
       </div>
     </>
     

@@ -23,10 +23,7 @@ app.use(xss())
 app.use(cors({
   origin: ["https://book-app-store.netlify.app","http://localhost:5173"]
 }))
-app.use(rateLimiter({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, //limit each ip to 100 requests per windowMs
-}))
+
 
 
 //routes
