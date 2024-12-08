@@ -52,10 +52,10 @@ const Home = ({ setGameId, gameId }) => {
         <Category sort = "Price" title = "Under 500 EGP"/>
       </div>
       <div>
-        <Category sort = "Category" title = "Action" />
+        <Category sort = "CategoryId" title = "Action" />
       </div>
       <div>
-        <Category sort = "Category" title = "Adventure" />
+        <Category sort = "CategoryId" title = "Adventure" />
       </div>
     </>
     
