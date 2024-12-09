@@ -19,7 +19,8 @@ function App() {
       </ShowNavBar>
       <Routes>
         <Route path="/" element={<Home setGameId={setGameId} gameId={gameId} />} />
-        <Route path="/Products/:category" element={<Products setGameId={setGameId} gameId={gameId} />} />
+        <Route path="/Products/:category" element={<Products setSearchData={setSearchData} setGameId={setGameId} gameId={gameId} />} />
+        <Route path="/search" element={<Products searchData={searchData} setSearchData={setSearchData} setGameId={setGameId} gameId={gameId} />} />
       </Routes>
 
     </>

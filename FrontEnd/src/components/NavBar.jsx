@@ -1,10 +1,19 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from '../images/Logo.png';
+import { useState, useEffect } from "react";
 
 
 const NavBar = ({ searchData, setSearchData, userName }) => {
   const navigate = useNavigate();
+  const [searchBarData, setSearchBarData] = useState('');
+
+  const search = ()=>{
+    console.log(searchBarData)
+    setSearchData(searchBarData);
+    console.log(searchData)
+    navigate(`/search`)
+  }
 
   return (
     <>
@@ -16,9 +25,9 @@ const NavBar = ({ searchData, setSearchData, userName }) => {
           <div className="flex-grow mx-4 outline-none">
             <input
               type="text"
-              value={searchData}
-              onKeyDown={(e) => e.key === "Enter"? navigate(`/search?${searchData}`):null}
-              onChange={(e) => setSearchData(e.target.value)}
+              value={searchBarData}
+              onKeyDown={(e) => e.key === "Enter"? search() : null}
+              onChange={(e) => setSearchBarData(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg"
               placeholder="Search..."
             />

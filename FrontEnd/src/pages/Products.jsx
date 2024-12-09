@@ -19,6 +19,17 @@ const Products = ({ searchData, setSearchData }) => {
 
   }, [location.pathname]);
 
+  useEffect(() => {
+    if (searchData){
+      const getData = async ()=>{
+        const url = `http://localhost:3000/api/v1/products?Name=${searchData}`
+        const response = await axios.get(url);
+        setData(response.data.games);
+      }
+      getData()
+    }
+  }, [searchData]);
+
   const handleSortChange = async (event) => {
     const selectedSort = event.target.value;
     setSortValue(selectedSort);
@@ -58,7 +69,7 @@ const Products = ({ searchData, setSearchData }) => {
   return (
     <div className="flex flex-row items-start gap-6 p-4">
       {/* Sorting and Category Dropdown */}
-      <div className="flex flex-col items-start mt-24 gap-4 p-4 bg-gray-100 rounded-md">
+      {!searchData?<div className="flex flex-col items-start mt-24 gap-4 p-4 bg-gray-100 rounded-md">
         <div className="w-full">
           <label htmlFor="sort" className="block text-sm font-medium text-gray-700 mb-1">
             Sort
@@ -95,11 +106,12 @@ const Products = ({ searchData, setSearchData }) => {
             <option value="Horror">Horror</option>
           </select>
         </div>
-      </div>
+      </div>:''}
+      
 
       {/* Category Component */}
       <div>
-        {sortValue || categoryValue ? <Category data={data} title={platform} /> : <Category sort="Platform" title={platform} />}
+        {sortValue || categoryValue || searchData ? <Category data={data} title={platform} /> : <Category sort="Platform" title={platform} />}
       </div>
     </div>
   );
