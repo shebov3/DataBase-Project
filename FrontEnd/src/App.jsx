@@ -5,8 +5,7 @@ import Home from './pages/Home'
 import ShowNavBar from './components/ShowNavBar'
 import NavBar from './components/NavBar'
 import Products from './pages/Products'
-import ReloadOnRouteChange from './components/ReloadOnRouteChange'
-
+import Product from './pages/Product'
 
 
 function App() {
@@ -19,8 +18,9 @@ function App() {
       </ShowNavBar>
       <Routes>
         <Route path="/" element={<Home setGameId={setGameId} gameId={gameId} />} />
-        <Route path="/Products/:category" element={<Products setSearchData={setSearchData} setGameId={setGameId} gameId={gameId} />} />
-        <Route path="/search" element={<Products searchData={searchData} setSearchData={setSearchData} setGameId={setGameId} gameId={gameId} />} />
+        <Route path="/Products/:category" element={<Products setGameId={setGameId} />} />
+        <Route path="/search" element={<Products searchData={searchData} setGameId={setGameId} />} />
+        <Route path="/product/:category" element={<Product gameId={gameId} />} />
       </Routes>
 
     </>

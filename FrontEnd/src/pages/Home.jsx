@@ -49,13 +49,13 @@ const Home = ({ setGameId, gameId }) => {
         </Slider>
       </div>
       <div>
-        <Category sort = "Price" title = "Under 500 EGP"/>
+        <Category setGameId={setGameId} gameId={gameId} sort = "Price" title = "Under 500 EGP"/>
       </div>
       <div>
-        <Category sort = "CategoryId" title = "Action" />
+        <Category setGameId={setGameId} gameId={gameId} sort = "CategoryId" title = "Action" />
       </div>
       <div>
-        <Category sort = "CategoryId" title = "Adventure" />
+        <Category setGameId={setGameId} gameId={gameId} sort = "CategoryId" title = "Adventure" />
       </div>
     </>
     

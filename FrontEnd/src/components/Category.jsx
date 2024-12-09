@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import Card from './Card';
 import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
 
-const Categories = ({ sort, title, data }) => {
+
+const Categories = ({ sort, title, data, setGameId }) => {
   const [sortedData, setData] = useState([]);
   useEffect(() => {
     const getSortedData = async () => {
@@ -32,29 +34,43 @@ const Categories = ({ sort, title, data }) => {
     getSortedData()
   }, [sort, title, data]) 
 
+
+
+  const productClick = ()=>{
+    console.log(`Product id`)
+  }
+
   return (
     <div className="container mx-auto px-10 py-8">
       <h2 className="text-3xl font-semibold text-white mb-6">{title}</h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {data?data.map((item) => (
-          <Card
-            key={item.ProductId}
-            image={'https://via.placeholder.com/600x300'}
-            title={item.Name}
-            description={item.Description}
-            price={item.Price}
-            platform={item.Platform}
-          />
+          <Link key={item.ProductId} onClick={()=>setGameId(item.ProductId)}
+            to={`/product/${item.ProductId}`}
+          >
+            <Card
+              key={item.ProductId}
+              image={'https://via.placeholder.com/600x300'}
+              title={item.Name}
+              description={item.Description}
+              price={item.Price}
+              platform={item.Platform}
+            />
+          </Link>
         )):sortedData.map((item) => (
-          <Card
-            key={item.ProductId}
-            image={'https://via.placeholder.com/600x300'}
-            title={item.Name}
-            description={item.Description}
-            price={item.Price}
-            platform={item.Platform}
-          />
+          <Link key={item.ProductId} onClick={()=>setGameId(item.ProductId)}
+            to={`/product/${item.ProductId}`}
+          > 
+            <Card
+              image={'https://via.placeholder.com/600x300'}
+              title={item.Name}
+              description={item.Description}
+              price={item.Price}
+              platform={item.Platform}
+            />
+          </Link>
+          
         ))}
       </div>
 

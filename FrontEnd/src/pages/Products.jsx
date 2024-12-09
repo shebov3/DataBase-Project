@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import axios from "axios";
 import Category from "../components/Category";
 
-const Products = ({ searchData, setSearchData }) => {
+const Products = ({ searchData, setGameId }) => {
   const location = useLocation();
   const [platform, setPlatform] = useState("");
   const [data, setData] = useState("");
@@ -111,7 +111,7 @@ const Products = ({ searchData, setSearchData }) => {
 
       {/* Category Component */}
       <div>
-        {sortValue || categoryValue || searchData ? <Category data={data} title={platform} /> : <Category sort="Platform" title={platform} />}
+        {sortValue || categoryValue || searchData ? <Category setGameId={setGameId} data={data} title={platform} /> : <Category setGameId={setGameId} sort="Platform" title={platform} />}
       </div>
     </div>
   );
