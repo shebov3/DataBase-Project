@@ -44,6 +44,7 @@ const Categories = ({ sort, title, data }) => {
             title={item.Name}
             description={item.Description}
             price={item.Price}
+            platform={item.Platform}
           />
         )):sortedData.map((item) => (
           <Card
@@ -52,6 +53,7 @@ const Categories = ({ sort, title, data }) => {
             title={item.Name}
             description={item.Description}
             price={item.Price}
+            platform={item.Platform}
           />
         ))}
       </div>
