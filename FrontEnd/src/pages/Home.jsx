@@ -1,10 +1,8 @@
 import React from "react";
-import Card from "../components/Card";
 import Category from "../components/Category"
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
-import imageSrc from "../images/images.jpeg";
+import { Link } from "react-router-dom";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
@@ -36,7 +34,7 @@ const Home = ({ setGameId, gameId }) => {
       <div className="flex justify-center mt-4">
         <Slider className="w-[60rem] cursor-pointer" {...settings}>
           {data.map((game) => (
-            <div key={game.ProductId} className="">
+            <Link key={game.ProductId} onClick={()=>setGameId(game.ProductId)} to={`/product/${game.ProductId}`}>
               <img
               // change to games.Img
                 src={"https://via.placeholder.com/600x300"}
@@ -44,7 +42,7 @@ const Home = ({ setGameId, gameId }) => {
                 className="w-full h-auto rounded-lg"
               />
               <h3 className="text-center text-lg font-medium mt-2 text-[rgb(149,171,82)]">{game.Name}</h3>
-            </div>
+            </Link>
           ))}
         </Slider>
       </div>

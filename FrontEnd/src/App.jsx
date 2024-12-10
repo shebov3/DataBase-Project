@@ -20,7 +20,7 @@ function App() {
         <Route path="/" element={<Home setGameId={setGameId} gameId={gameId} />} />
         <Route path="/Products/:category" element={<Products setGameId={setGameId} />} />
         <Route path="/search" element={<Products searchData={searchData} setGameId={setGameId} />} />
-        <Route path="/product/:category" element={<Product gameId={gameId} />} />
+        <Route path="/product/:gameId" element={<Product />} />
       </Routes>
 
     </>

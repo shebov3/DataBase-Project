@@ -12,12 +12,12 @@ const addGame = async (req, res) => {
   // Change image to be buffer using mutler library
   // image has to be in req.file not req.body
   const { admin } = req.user
-  const { name, brand, desc, rating, price, sq, categoryId, img, platform, releaseDate } = req.body
+  const { name, brand, desc, rating, price, sq, categoryId, imgs, platform, releaseDate } = req.body
   if (!admin) {
     throw new CustomAPIError('this user has no access to this route', StatusCodes.UNAUTHORIZED)
   }
   const db = await dbConnect;
-  await db.request()
+  productId = await db.request()
     .input('NAME', sql.VarChar, name)
     .input('Brand', sql.VarChar, brand)
     .input('Description', sql.VarChar, desc)
@@ -25,14 +25,23 @@ const addGame = async (req, res) => {
     .input('Price', sql.Int, price)
     .input('StockQuantity', sql.Int, sq)
     .input('CategoryId', sql.Int, categoryId)
-    // CHANGE VARCHAR TO VARBINARY
-    .input('Img', sql.VarChar, img)
     .input('Platform', sql.VarChar, platform)
     .input('ReleaseDate', sql.VarChar, releaseDate)
-    .query("INSERT INTO Product VALUES(@NAME, @Brand, @Description, @Rating, @Price, @StockQuantity, @CategoryId, @Img, @Platform, @ReleaseDate)");
+    .query("INSERT INTO Product VALUES(@NAME, @Brand, @Description, @Rating, @Price, @StockQuantity, @CategoryId, @Platform, @ReleaseDate);SELECT SCOPE_IDENTITY() AS ProductId;");
+
+  imgs.map(async (img)=>{
+    await db.request()
+    .input('ProductId', productId.recordset[0].ProductId)
+    // CHANGE VARCHAR TO VARBINARY
+    .input('Img', sql.VarChar, img)
+    .query("INSERT INTO Product_IMG VALUES(@ProductId, @Img)")
+  })
+
 
   res.status(StatusCodes.OK).send('Game Added Successfully')
 }
+
+
 
 const addCategory = async (req, res) => {
   const { admin } = req.user

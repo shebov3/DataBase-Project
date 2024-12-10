@@ -35,11 +35,6 @@ const Categories = ({ sort, title, data, setGameId }) => {
   }, [sort, title, data]) 
 
 
-
-  const productClick = ()=>{
-    console.log(`Product id`)
-  }
-
   return (
     <div className="container mx-auto px-10 py-8">
       <h2 className="text-3xl font-semibold text-white mb-6">{title}</h2>
