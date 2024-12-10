@@ -6,6 +6,7 @@ import ShowNavBar from './components/ShowNavBar'
 import NavBar from './components/NavBar'
 import Products from './pages/Products'
 import Product from './pages/Product'
+import Login from './pages/Login'
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
         <Route path="/Products/:category" element={<Products setGameId={setGameId} />} />
         <Route path="/search" element={<Products searchData={searchData} setGameId={setGameId} />} />
         <Route path="/product/:gameId" element={<Product />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
 
     </>
