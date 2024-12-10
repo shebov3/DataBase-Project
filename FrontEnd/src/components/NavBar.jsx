@@ -1,18 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from '../images/Logo.png';
-import { useState, useEffect } from "react";
 
-
-const NavBar = ({ searchData, setSearchData, userName }) => {
+const NavBar = ({ searchData, setSearchData, userData, setUserData }) => {
   const navigate = useNavigate();
   const [searchBarData, setSearchBarData] = useState('');
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  const search = ()=>{
-    console.log(searchBarData)
+  const search = () => {
     setSearchData(searchBarData);
-    console.log(searchData)
-    navigate(`/search`)
+    navigate(`/search`);
+  };
+
+  const handleLogout = () => {
+    localStorage.clear();
+    setUserData({});
+    navigate('/');
+  };
+  const cartOnClick = ()=>{
+    userData.user ? navigate('/cart') : alert('log in to access cart')
   }
 
   return (
@@ -20,23 +26,41 @@ const NavBar = ({ searchData, setSearchData, userName }) => {
       <nav className="bg-[rgb(28,34,52)] shadow-lg">
         <div className="mx-auto flex justify-between items-center h-[70px] px-4 lg:px-20">
           <div className="text-xl text-white font-semibold">
-            <Link to="/"><img className="w-10" src={logo} /></Link>
+            <Link to="/"><img className="w-10" src={logo} alt="Logo" /></Link>
           </div>
           <div className="flex-grow mx-4 outline-none">
             <input
               type="text"
               value={searchBarData}
-              onKeyDown={(e) => e.key === "Enter"? search() : null}
+              onKeyDown={(e) => (e.key === "Enter" ? search() : null)}
               onChange={(e) => setSearchBarData(e.target.value)}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg"
               placeholder="Search..."
             />
           </div>
 
-          {/* Sign In Button */}
-          <div className="flex items-center space-x-4">
-            {userName ? (
-              <span className="text-gray-600">Welcome, {userName}</span>
+          {/* User Actions */}
+          <div className="flex items-center space-x-4 relative">
+            {userData.user ? (
+              <div className="relative">
+                <button
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                  className="text-gray-600 hover:text-white flex items-center space-x-2"
+                >
+                  <span>Welcome, {userData.user.user.Name}</span>
+                  <i className="fa-solid fa-caret-down"></i>
+                </button>
+                {dropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg">
+                    <button
+                      onClick={handleLogout}
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-red-100 hover:text-red-500 transition duration-200 rounded-md"
+                    >
+                      <i className="fa-solid fa-right-from-bracket mr-2"></i> Logout
+                    </button>
+                  </div>
+                )}
+              </div>
             ) : (
               <Link
                 to="/login"
@@ -47,12 +71,11 @@ const NavBar = ({ searchData, setSearchData, userName }) => {
             )}
 
             {/* Cart Button */}
-            <Link to="/cart" className="text-gray-600 hover:text-gray-900">
+            <div onClick={cartOnClick} className="text-gray-600 hover:text-gray-900">
               <button className="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300">
                 <i className="fa-solid fa-cart-shopping"></i>
-
               </button>
-            </Link>
+            </div>
           </div>
         </div>
 

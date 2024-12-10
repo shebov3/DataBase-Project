@@ -83,7 +83,7 @@ const register = async (req,res)=>{
   .query("INSERT INTO Cart VALUES (@CustomerId)")
 
   const token = createJWT(user.recordset[0].AdminState, user.recordset[0].CustomerId, user.recordset[0].Name)
-  res.status(StatusCodes.CREATED).json({user, token})
+  res.status(StatusCodes.CREATED).json({user:user.recordset[0], token})
 }
 
 const login = async (req,res)=>{
@@ -101,7 +101,7 @@ const login = async (req,res)=>{
     throw new CustomAPIError('Password doesnt match', StatusCodes.UNAUTHORIZED)
   }
   const token = createJWT(user.recordset[0].AdminState, user.recordset[0].CustomerId, user.recordset[0].Name)
-  res.status(StatusCodes.OK).json({user, token})
+  res.status(StatusCodes.OK).json({user:user.recordset[0], token})
 }
 
 

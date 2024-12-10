@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import logo from '../images/Logo.png';
+import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
 
-const Login = () => {
+
+const Login = ({setUserData}) => {
+  const navigate = useNavigate()
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
@@ -13,11 +18,29 @@ const Login = () => {
     setPassword(event.target.value);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // Handle login logic here, e.g., send a request to your backend
-    console.log('Email:', email);
-    console.log('Password:', password);
+    const emailRegex = /^[^\s@]+@[gmail.com]+$/;
+    if (!emailRegex.test(email)) {
+      alert('Please enter a valid Gmail address (e.g., example@gmail.com)');
+      return;
+    }
+
+    try {
+      const url = `http://localhost:3000/api/v1/auth/login`
+      const user = await axios.post(url, {
+        email: email,
+        password: password,
+      });
+      localStorage.setItem('user', JSON.stringify(user.data));
+      setUserData({
+        user:JSON.parse(localStorage.getItem('user')),
+      })
+      navigate('/')
+    } catch (error) {
+      alert('Email or password wrong')
+      console.error('Error logging in:', error);
+    }
   };
 
   return (
