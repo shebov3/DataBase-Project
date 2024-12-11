@@ -7,18 +7,18 @@ import logo from '../images/Logo.png';
 
 const Register = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    dob: '',
+    Name: '',
+    Email: '',
+    Password: '',
+    DateOfBirth: '',
+    confirmPassword: ''
   });
   const [location, setLocation] = useState({
-    country: '',
-    city: '',
-    street: '',
-    state: '',
-    zip: '',
+    Country: '',
+    City: '',
+    Street: '',
+    State: '',
+    ZIP: '',
     lat: 31.208870,
     lng: 29.909201,
   });
@@ -74,11 +74,11 @@ const Register = () => {
             setLocation({
               lat,
               lng,
-              country: address.country || '',
-              city: address.city || address.town || address.village || '',
-              street: address.road || '',
-              state: address.state || '',
-              zip: address.postcode || '',
+              Country: address.country || '',
+              City: address.city || address.town || address.village || '',
+              Street: address.road || '',
+              State: address.state || '',
+              ZIP: address.postcode || '',
             });
           })
           .catch((error) => console.error('Error fetching location data:', error));
@@ -99,7 +99,7 @@ const Register = () => {
             <input
               type="text"
               name="name"
-              value={formData.name}
+              value={formData.Name}
               onChange={handleChange}
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
               required
@@ -110,7 +110,7 @@ const Register = () => {
             <input
               type="email"
               name="email"
-              value={formData.email}
+              value={formData.Email}
               onChange={handleChange}
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
               required
@@ -121,7 +121,7 @@ const Register = () => {
             <input
               type="password"
               name="password"
-              value={formData.password}
+              value={formData.Password}
               onChange={handleChange}
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
               required
@@ -143,7 +143,7 @@ const Register = () => {
             <input
               type="date"
               name="dob"
-              value={formData.dob}
+              value={formData.DateOfBirth}
               onChange={handleChange}
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
               required
@@ -160,13 +160,13 @@ const Register = () => {
                 <LocationMarker />
               </MapContainer>
             </div>
-            {location.country && (
-              <div className="mt-4 text-gray-600">
-                <p>Country: {location.country}</p>
-                <p>City: {location.city}</p>
-                <p>Street: {location.street}</p>
-                <p>State: {location.state}</p>
-                <p>Zip Code: {location.zip}</p>
+            {location.Country && (
+              <div className="mt-4 text-white">
+                <p>Country: {location.Country}</p>
+                <p>City: {location.City}</p>
+                <p>Street: {location.Street}</p>
+                <p>State: {location.State}</p>
+                <p>Zip Code: {location.ZIP}</p>
               </div>
             )}
           </div>
