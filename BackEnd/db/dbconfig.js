@@ -3,8 +3,8 @@ const sql = require("mssql");
 const dbConfig = {
   server: "DESKTOP-39J7HPU",
   user:"Ruxuis",
-  password:"ParCore9@",               // Your SQL Server instance
-  database: "steam",    // Replace with your actual database name
+  password:"ParCore9@",         
+  database: "steam",    
   options: {
     encrypt: false,                  
     trustServerCertificate: true,

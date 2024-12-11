@@ -4,6 +4,7 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 
 
+
 const Login = ({setUserData}) => {
   const navigate = useNavigate()
   const [email, setEmail] = useState('');
@@ -82,7 +83,7 @@ const Login = ({setUserData}) => {
           </button>
         </form>
         <div className="text-center mt-4">
-          <p className="text-sm text-gray-300">Don't have an account? <a href="#" className="text-[rgb(149,171,82)] hover:underline">Register Now</a></p>
+          <p className="text-sm text-gray-300">Don't have an account? <Link to={'/register'} className="text-[rgb(149,171,82)] hover:underline">Register Now</Link></p>
         </div>
       </div>
     </div>
