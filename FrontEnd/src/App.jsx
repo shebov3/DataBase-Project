@@ -25,7 +25,7 @@ function App() {
         <Route path="/product/:gameId" element={<Product />} />
         <Route path="/login" element={<Login setUserData={setUserData} />} />
         <Route path="/cart" element={<Cart />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/register" element={<Register setUserData={setUserData} />} />
       </Routes>
 
     </>
