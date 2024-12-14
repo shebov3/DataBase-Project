@@ -7,7 +7,8 @@ const {
   addGameToCart,
   getCartItems,
   deleteCartItem,
-  addReview
+  addReview,
+  placeOrder
 } = require('../controllers/req-auth')
 
 const express = require('express')
@@ -20,4 +21,5 @@ router.route('/admin/category').post(addCategory)
 router.route('/cart/:id').post(addGameToCart).patch(deleteCartItem)
 router.route('/cart').get(getCartItems)
 router.route('/review/:id').post(addReview)
+router.route('/order').post(placeOrder)
 module.exports = router

@@ -8,6 +8,7 @@ import Product from './pages/Product'
 import Login from './pages/Login'
 import Cart from './pages/Cart'
 import Register from './pages/Register'
+import Account from './pages/Account'
 
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
         <Route path="/login" element={<Login setUserData={setUserData} />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/register" element={<Register setUserData={setUserData} />} />
+        <Route path="/account" element={<Account />} />
       </Routes>
 
     </>

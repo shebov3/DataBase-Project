@@ -160,6 +160,47 @@ const deleteCartItem = async (req, res) => {
   res.status(StatusCodes.OK).send('Game Deleted Successfully')
 }
 
+const placeOrder = async (req, res) => {
+  const { user: { customerId }, body: {cartItems, total} } = req
+  const db = await dbConnect;
+  let orderId = await db.request()
+    .input('CustomerId', customerId)
+    .input('TotalAmount', total)
+    .input('AmountPaid', total)
+    .query(`
+      INSERT INTO TheOrder (CustomerId, TotalAmount, AmountPaid)
+      OUTPUT INSERTED.OrderId
+      VALUES (@CustomerId, @TotalAmount, @AmountPaid)
+    `);
+
+  orderId = orderId.recordset[0].OrderId;
+
+  let orderItemId = await db.request()
+    .input('Price', total)
+    .input('OrderId', orderId)
+    .query(`
+      INSERT INTO OrderItem
+      OUTPUT INSERTED.OrderItemId
+      VALUES (@Price, @OrderId)
+    `);
+  orderItemId = orderItemId.recordset[0].OrderItemId;
+
+
+  cartItems.map(async (item)=>{
+    await db.request()
+    .input('OrderItemId', orderItemId)
+    .input('ProductId', item.ProductId)
+    .input('Quantity', item.Quantity)
+    .query(`
+      INSERT INTO OrderItemProducts
+      VALUES (@OrderItemId, @ProductId, @Quantity)
+    `);
+  })
+
+  
+  res.status(StatusCodes.CREATED).send('Order Placed Successfully')
+}
+
 const addReview = async (req, res) => {
   const {id:productId} = req.params
   const {rating, comment} = req.body
@@ -182,5 +223,6 @@ module.exports = {
   addGameToCart,
   getCartItems,
   deleteCartItem,
-  addReview
+  addReview,
+  placeOrder
 }

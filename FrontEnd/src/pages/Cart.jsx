@@ -4,6 +4,7 @@ import axios from "axios";
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
+  const [cartTotal, setCartTotal] = useState([]);
 
   const removeItem = async (id) => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -20,12 +21,35 @@ const Cart = () => {
     setCartItems((prevItems) => prevItems.filter((item) => item.ProductId !== id));
   };
 
-  const calculateTotal = () => {
-    return cartItems.reduce(
+  const placeOrder = async ()=>{
+    const user = JSON.parse(localStorage.getItem("user"));
+    const url = `http://localhost:3000/api/v1/user/order`;
+    await axios.post(
+      url,
+      {
+        cartItems,
+        total: cartTotal
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      }
+    );
+    cartItems.map((item)=>{
+      removeItem(item.ProductId)
+    })
+    setCartItems([]);
+  }
+
+  
+  useEffect(() => {
+    const total = cartItems.reduce(
       (total, item) => total + item.Price * item.Quantity,
       0
     );
-  };
+    setCartTotal(total)
+  }, [cartItems]) 
   
   useEffect(() => {
     const getData = async () => {
@@ -99,7 +123,7 @@ const Cart = () => {
               </h2>
               <div className="flex justify-between text-gray-700 mb-2">
                 <p>Subtotal</p>
-                <p>${calculateTotal().toFixed(2)}</p>
+                <p>${cartTotal}</p>
               </div>
               <div className="flex justify-between text-gray-700 mb-4">
                 <p>Shipping</p>
@@ -108,10 +132,10 @@ const Cart = () => {
               <hr className="my-2" />
               <div className="flex justify-between text-xl font-bold text-gray-800">
                 <p>Total</p>
-                <p>${calculateTotal().toFixed(2)}</p>
+                <p>${cartTotal}</p>
               </div>
-              <button className="mt-6 w-full py-3 bg-[rgb(149,171,82)] text-white text-lg rounded-lg hover:bg-blue-600">
-                Proceed to Checkout
+              <button onClick={placeOrder} className="mt-6 w-full py-3 bg-[rgb(149,171,82)] text-white text-lg rounded-lg hover:bg-blue-600">
+                Checkout
               </button>
             </div>
           </div>
