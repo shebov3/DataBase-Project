@@ -6,16 +6,18 @@ const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
 
   const removeItem = async (id) => {
+    const user = JSON.parse(localStorage.getItem("user"));
     const url = `http://localhost:3000/api/v1/user/cart/${id}`;
-    const response = await axios.patch(
+    await axios.patch(
       url,
+      {},
       {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
       }
     );
-    setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
+    setCartItems((prevItems) => prevItems.filter((item) => item.ProductId !== id));
   };
 
   const calculateTotal = () => {
@@ -53,7 +55,10 @@ const Cart = () => {
           <p className="text-center text-gray-500">Your cart is empty.</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="col-span-2">
+            <div 
+              className="col-span-2 overflow-y-auto"
+              style={{ maxHeight: '400px' }} // Adjust maxHeight as needed
+            >
               {cartItems.map((item) => (
                 <div
                   key={item.ProductId}
