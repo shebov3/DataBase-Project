@@ -52,13 +52,6 @@ const NavBar = ({ searchData, setSearchData, userData, setUserData }) => {
                 </button>
                 {dropdownOpen && (
                   <div className="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg">
-                    <button
-                      onClick={handleLogout}
-                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:text-red-500 transition duration-200 rounded-md"
-                    >
-                      <i className="fa-solid fa-right-from-bracket mr-2"></i> 
-                      <span className="ml-2">Log Out</span> 
-                    </button>
                     <Link 
                       to={'/account'}
                       className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:text-[rgb(149,171,82)] transition duration-200 rounded-md"
@@ -66,6 +59,14 @@ const NavBar = ({ searchData, setSearchData, userData, setUserData }) => {
                       <i className="fa-solid fa-file-invoice"></i>
                       <span className="ml-4">Account</span> 
                     </Link>
+                    
+                    <button
+                      onClick={handleLogout}
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:text-red-500 transition duration-200 rounded-md"
+                    >
+                      <i className="fa-solid fa-right-from-bracket mr-2"></i> 
+                      <span className="ml-2">Log Out</span> 
+                    </button>
                   </div>
                 )}
               </div>
