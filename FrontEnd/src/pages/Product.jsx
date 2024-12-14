@@ -18,6 +18,13 @@ const Product = () => {
 
   }, [gameId]);
 
+  const addToCart = async ()=>{
+    const url = `http://localhost:3000/api/v1/cart/${gameId}`
+    const response = await axios.get(url);
+    setData(response.data.game[0]);
+    console.log(data)
+  }
+
 
   return (
     <div className="bg-gray-900 text-white min-h-screen p-8">
@@ -57,7 +64,7 @@ const Product = () => {
         <div className="bg-gray-800 p-6 rounded-lg shadow-lg max-w-md">
           <h2 className="text-2xl font-bold mb-4">{data.Name}</h2>
           <p className="text-[rgb(149,171,82)] text-3xl font-bold mb-4">{data.Price}$</p>
-          <button className="bg-[rgb(149,171,82)] hover:bg-green-600 text-white font-semibold py-2 px-4 rounded w-full mb-4">
+          <button onClick={addToCart} className="bg-[rgb(149,171,82)] hover:bg-green-600 text-white font-semibold py-2 px-4 rounded w-full mb-4">
             ADD TO CART
           </button>
           <h3 className="text-lg font-semibold mb-3">Product Information</h3>

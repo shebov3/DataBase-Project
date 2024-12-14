@@ -18,7 +18,6 @@ const Cart = () => {
     },
   ]);
 
-  // Update quantity of an item
   const updateQuantity = (id, quantity) => {
     if (quantity < 1) return;
     setCartItems((prevItems) =>
@@ -28,12 +27,10 @@ const Cart = () => {
     );
   };
 
-  // Remove an item from the cart
   const removeItem = (id) => {
     setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
   };
 
-  // Calculate total price
   const calculateTotal = () => {
     return cartItems.reduce(
       (total, item) => total + item.price * item.quantity,
@@ -42,7 +39,7 @@ const Cart = () => {
   };
 
   return (
-    <div className="min-h-screen py-8">
+    <div className="min-h-screen px-8 py-10">
       <div className="container mx-auto p-6 bg-white shadow-lg rounded-lg">
         <h1 className="text-3xl font-bold mb-6 text-gray-800 text-center">
           Your Shopping Cart
@@ -122,7 +119,7 @@ const Cart = () => {
                 <p>Total</p>
                 <p>${calculateTotal().toFixed(2)}</p>
               </div>
-              <button className="mt-6 w-full py-3 bg-blue-500 text-white text-lg rounded-lg hover:bg-blue-600">
+              <button className="mt-6 w-full py-3 bg-[rgb(149,171,82)] text-white text-lg rounded-lg hover:bg-blue-600">
                 Proceed to Checkout
               </button>
             </div>
