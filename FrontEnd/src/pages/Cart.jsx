@@ -1,42 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from "axios";
+
 
 const Cart = () => {
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      name: 'Product 1',
-      price: 20.0,
-      quantity: 1,
-      image: 'https://via.placeholder.com/80',
-    },
-    {
-      id: 2,
-      name: 'Product 2',
-      price: 35.0,
-      quantity: 2,
-      image: 'https://via.placeholder.com/80',
-    },
-  ]);
+  const [cartItems, setCartItems] = useState([]);
 
-  const updateQuantity = (id, quantity) => {
-    if (quantity < 1) return;
-    setCartItems((prevItems) =>
-      prevItems.map((item) =>
-        item.id === id ? { ...item, quantity } : item
-      )
+  const removeItem = async (id) => {
+    const url = `http://localhost:3000/api/v1/user/cart/${id}`;
+    const response = await axios.patch(
+      url,
+      {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      }
     );
-  };
-
-  const removeItem = (id) => {
     setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
   };
 
   const calculateTotal = () => {
     return cartItems.reduce(
-      (total, item) => total + item.price * item.quantity,
+      (total, item) => total + item.Price * item.Quantity,
       0
     );
   };
+  
+  useEffect(() => {
+    const getData = async () => {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const url = `http://localhost:3000/api/v1/user/cart`;
+      const response = await axios.get(
+        url,
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+      setCartItems(response.data.games)
+    }
+
+    getData()
+  }, []) 
 
   return (
     <div className="min-h-screen px-8 py-10">
@@ -51,50 +56,30 @@ const Cart = () => {
             <div className="col-span-2">
               {cartItems.map((item) => (
                 <div
-                  key={item.id}
-                  className="flex items-center justify-between border-b py-4"
+                  key={item.ProductId}
+                  className="grid grid-cols-3 items-center border-b py-4 gap-4"
                 >
-                  <div className="flex items-center">
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      className="w-16 h-16 rounded-lg shadow-md"
-                    />
-                    <div className="ml-4">
-                      <h2 className="font-medium text-lg text-gray-700">
-                        {item.name}
-                      </h2>
-                      <p className="text-gray-500">${item.price.toFixed(2)}</p>
+                  {/* Product Info */}
+                  <div className="flex items-center space-x-4">
+                    <div>
+                      <h2 className="font-medium text-lg text-gray-700">{item.Name}</h2>
+                      <p className="text-gray-500">${item.Price.toFixed(2)}</p>
                     </div>
                   </div>
-                  <div className="flex items-center space-x-4">
-                    <button
-                      className="px-3 py-1 bg-gray-200 rounded-lg hover:bg-gray-300"
-                      onClick={() =>
-                        updateQuantity(item.id, item.quantity - 1)
-                      }
-                    >
-                      -
-                    </button>
-                    <span className="text-lg font-semibold">
-                      {item.quantity}
-                    </span>
-                    <button
-                      className="px-3 py-1 bg-gray-200 rounded-lg hover:bg-gray-300"
-                      onClick={() =>
-                        updateQuantity(item.id, item.quantity + 1)
-                      }
-                    >
-                      +
-                    </button>
+
+                  {/* Quantity */}
+                  <div className="flex justify-center">
+                    <span className="text-lg font-semibold">{item.Quantity}</span>
                   </div>
-                  <div className="flex items-center space-x-4">
+
+                  {/* Price and Actions */}
+                  <div className="flex items-center justify-end space-x-4">
                     <p className="text-lg font-medium text-gray-700">
-                      ${(item.price * item.quantity).toFixed(2)}
+                      ${(item.Price * item.Quantity).toFixed(2)}
                     </p>
                     <button
                       className="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600"
-                      onClick={() => removeItem(item.id)}
+                      onClick={() => removeItem(item.ProductId)}
                     >
                       Remove
                     </button>
@@ -102,6 +87,7 @@ const Cart = () => {
                 </div>
               ))}
             </div>
+
             <div className="bg-gray-50 p-6 rounded-lg shadow-md">
               <h2 className="text-xl font-semibold text-gray-700 mb-4">
                 Order Summary

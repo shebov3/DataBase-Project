@@ -116,16 +116,32 @@ const addGameToCart = async (req, res) => {
 }
 
 const getCartItems = async (req, res) => {
-  const { customerId } = req.user
+  const { customerId } = req.user;
   const db = await dbConnect;
-  cartId = await db.request()
+
+  const cartIdResult = await db.request()
     .input('CustomerId', customerId)
     .query("SELECT CartId FROM Cart WHERE CustomerId = @CustomerId");
 
-  games = await db.request()
-    .input('CartId', cartId.recordset[0].CartId)
-    .query("SELECT * FROM CartItem WHERE CartId = @CartId");
-  res.status(StatusCodes.OK).json({ count: games.recordset[0].length, games: games.recordset[0] })
+  const cartId = cartIdResult.recordset[0].CartId;
+
+  const games = await db.request()
+    .input('CartId', cartId)
+    .query(`
+      SELECT 
+        p.ProductId,
+        p.Name, 
+        p.Price,
+        p.Brand,
+        p.platform,
+        ci.Quantity
+      FROM CartItem ci
+      INNER JOIN Product p ON ci.ProductId = p.ProductId
+      WHERE ci.CartId = @CartId
+    `);
+
+  res.status(StatusCodes.OK).json({ games: games.recordset });
+
 }
 
 const deleteCartItem = async (req, res) => {
