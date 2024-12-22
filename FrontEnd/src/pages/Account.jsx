@@ -57,66 +57,67 @@ const Orders = ()=>{
   }, []);
   
   return(
-      <div className="bg-gray-900 min-h-screen p-8">
-        <div className="max-w-6xl mx-auto bg-gray-800 rounded-lg p-6">
-          <h2 className="text-white text-2xl font-bold mb-2">Orders History</h2>
-          <p className="text-gray-400 mb-6">View your orders history</p>
-      
-          {orders.length > 0 ? (
-            <div className="overflow-x-auto">
-              <table className="table-auto w-full text-left border-collapse border border-gray-700">
-                <thead>
-                  <tr className="text-gray-400 bg-gray-700">
-                    <th className="p-3 border border-gray-700">Order Date</th>
-                    <th className="p-3 border border-gray-700">Products</th>
-                    <th className="p-3 border border-gray-700">Product Price</th>
-                    <th className="p-3 border border-gray-700">Quantity</th>
-                    <th className="p-3 border border-gray-700">Order Status</th>
-                    <th className="p-3 border border-gray-700">Total Price</th>
+    <div className="bg-gray-900 min-h-screen p-8">
+      <div className="max-w-6xl mx-auto bg-gray-800 rounded-lg p-6">
+        <h2 className="text-white text-2xl font-bold mb-2">Orders History</h2>
+        <p className="text-gray-400 mb-6">View your orders history</p>
+
+        {orders.length > 0 ? (
+          <div className="overflow-y-auto max-h-[calc(100vh-200px)]"> {/* Added max height and vertical overflow */}
+            <table className="table-auto w-full text-left border-collapse border border-gray-700">
+              <thead>
+                <tr className="text-gray-400 bg-gray-700">
+                  <th className="p-3 border border-gray-700">Order Date</th>
+                  <th className="p-3 border border-gray-700">Products</th>
+                  <th className="p-3 border border-gray-700">Product Price</th>
+                  <th className="p-3 border border-gray-700">Quantity</th>
+                  <th className="p-3 border border-gray-700">Order Status</th>
+                  <th className="p-3 border border-gray-700">Total Price</th>
+                </tr>
+              </thead>
+              <tbody>
+                {orders.map((order, index) => (
+                  <tr
+                    key={index}
+                    className={`transition-all ${
+                      order.Status === "DELIVERED"
+                        ? "bg-gray-700 text-gray-400"
+                        : "hover:bg-gray-700 text-white"
+                    }`}
+                  >
+                    <td className="p-3 border border-gray-700">{order.OrderDate}</td>
+                    <td className="p-3 border border-gray-700">
+                      {order.Products.map((product, i) => (
+                        <div key={i}>{product.ProductName}</div>
+                      ))}
+                    </td>
+                    <td className="p-3 border border-gray-700">
+                      {order.Products.map((product, i) => (
+                        <div key={i}>{product.ProductPrice}</div>
+                      ))}
+                    </td>
+                    <td className="p-3 border border-gray-700">
+                      {order.Products.map((product, i) => (
+                        <div key={i}>{product.Quantity}</div>
+                      ))}
+                    </td>
+                    <td className="p-3 border border-gray-700">{order.Status}</td>
+                    <td className="p-3 border border-gray-700">
+                      ${order.TotalOrderPrice}
+                    </td>
                   </tr>
-                </thead>
-                <tbody>
-                  {orders.map((order, index) => (
-                    <tr
-                      key={index}
-                      className={`transition-all ${
-                        order.Status === "DELIVERED"
-                          ? "bg-gray-700 text-gray-400"
-                          : "hover:bg-gray-700 text-white"
-                      }`}
-                    >
-                      <td className="p-3 border border-gray-700">{order.OrderDate}</td>
-                      <td className="p-3 border border-gray-700">
-                        {order.Products.map((product, i) => (
-                          <div key={i}>{product.ProductName}</div>
-                        ))}
-                      </td>
-                      <td className="p-3 border border-gray-700">
-                        {order.Products.map((product, i) => (
-                          <div key={i}>{product.ProductPrice}</div>
-                        ))}
-                      </td>
-                      <td className="p-3 border border-gray-700">
-                        {order.Products.map((product, i) => (
-                          <div key={i}>{product.Quantity}</div>
-                        ))}
-                      </td>
-                      <td className="p-3 border border-gray-700">{order.Status}</td>
-                      <td className="p-3 border border-gray-700">
-                        ${order.TotalOrderPrice}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          ) : (
-            <div className="text-gray-400 text-center p-4">
-              You Didn't Place Any Orders Yet
-            </div>
-          )}
-        </div>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="text-gray-400 text-center p-4">
+            You Didn't Place Any Orders Yet
+          </div>
+        )}
       </div>
+    </div>
+
   
   )
 }
@@ -336,86 +337,84 @@ const OrdersAdmin = () => {
 
   return (
     <div className="bg-gray-900 min-h-screen p-8">
-  <div className="max-w-6xl mx-auto bg-gray-800 rounded-lg p-6">
-    <h2 className="text-white text-2xl font-bold mb-2">Order Requests</h2>
-    <p className="text-gray-400 mb-6">Manage Requested Orders</p>
+      <div className="max-w-6xl mx-auto bg-gray-800 rounded-lg p-6">
+        <h2 className="text-white text-2xl font-bold mb-2">Order Requests</h2>
+        <p className="text-gray-400 mb-6">Manage Requested Orders</p>
 
-    {orders.length > 0 ? (
-      <div className="overflow-x-auto">
-        <table className="table-auto w-full text-left border-collapse border border-gray-700">
-          <thead>
-            <tr className="text-gray-400 bg-gray-700">
-              <th className="p-3 border border-gray-700">Order Date</th>
-              <th className="p-3 border border-gray-700">Customer ID</th>
-              <th className="p-3 border border-gray-700">Products</th>
-              <th className="p-3 border border-gray-700">Product Price</th>
-              <th className="p-3 border border-gray-700">Quantity</th>
-              <th className="p-3 border border-gray-700">Order Status</th>
-              <th className="p-3 border border-gray-700">Location</th>
-              <th className="p-3 border border-gray-700">Total Price</th>
-              <th className="p-3 border border-gray-700">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {orders.map((order, index) => (
-              <tr
-                key={index}
-                className={`transition-all ${
-                  order.Status === "DELIVERED"
-                    ? "bg-gray-700 text-gray-400"
-                    : "hover:bg-gray-700 text-white"
-                }`}
-              >
-                <td className="p-3 border border-gray-700">{order.OrderDate}</td>
-                <td className="p-3 border border-gray-700">{order.CustomerId}</td>
-                <td className="p-3 border border-gray-700">
-                  {order.Products.map((product, i) => (
-                    <div key={i}>{product.ProductName}</div>
-                  ))}
-                </td>
-                <td className="p-3 border border-gray-700">
-                  {order.Products.map((product, i) => (
-                    <div key={i}>{product.ProductPrice}</div>
-                  ))}
-                </td>
-                <td className="p-3 border border-gray-700">
-                  {order.Products.map((product, i) => (
-                    <div key={i}>{product.Quantity}</div>
-                  ))}
-                </td>
-                <td className="p-3 border border-gray-700">{order.Status}</td>
-                <td className="p-3 border border-gray-700">
-                  {address.Country}, {address.City}, {address.Street}
-                </td>
-                <td className="p-3 border border-gray-700">
-                  ${order.TotalOrderPrice}
-                </td>
-                <td className="p-3 border border-gray-700">
-                  {order.Status !== "DELIVERED" ? (
-                    <button
-                      onClick={() => handleDeliver(order.OrderId)}
-                      className="bg-green-600 hover:bg-green-500 text-white px-4 py-1 rounded"
-                    >
-                      Deliver
-                    </button>
-                  ) : (
-                    <span className="text-gray-400">Delivered</span>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        {orders.length > 0 ? (
+          <div className="overflow-y-auto max-h-[calc(100vh-200px)]"> {/* Added max height and vertical overflow */}
+            <table className="table-auto w-full text-left border-collapse border border-gray-700">
+              <thead>
+                <tr className="text-gray-400 bg-gray-700">
+                  <th className="p-3 border border-gray-700">Order Date</th>
+                  <th className="p-3 border border-gray-700">Customer ID</th>
+                  <th className="p-3 border border-gray-700">Products</th>
+                  <th className="p-3 border border-gray-700">Product Price</th>
+                  <th className="p-3 border border-gray-700">Quantity</th>
+                  <th className="p-3 border border-gray-700">Order Status</th>
+                  <th className="p-3 border border-gray-700">Location</th>
+                  <th className="p-3 border border-gray-700">Total Price</th>
+                  <th className="p-3 border border-gray-700">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {orders.map((order, index) => (
+                  <tr
+                    key={index}
+                    className={`transition-all ${
+                      order.Status === "DELIVERED"
+                        ? "bg-gray-700 text-gray-400"
+                        : "hover:bg-gray-700 text-white"
+                    }`}
+                  >
+                    <td className="p-3 border border-gray-700">{order.OrderDate}</td>
+                    <td className="p-3 border border-gray-700">{order.CustomerId}</td>
+                    <td className="p-3 border border-gray-700">
+                      {order.Products.map((product, i) => (
+                        <div key={i}>{product.ProductName}</div>
+                      ))}
+                    </td>
+                    <td className="p-3 border border-gray-700">
+                      {order.Products.map((product, i) => (
+                        <div key={i}>{product.ProductPrice}</div>
+                      ))}
+                    </td>
+                    <td className="p-3 border border-gray-700">
+                      {order.Products.map((product, i) => (
+                        <div key={i}>{product.Quantity}</div>
+                      ))}
+                    </td>
+                    <td className="p-3 border border-gray-700">{order.Status}</td>
+                    <td className="p-3 border border-gray-700">
+                      {order.Address.Country}, {order.Address.City}, {order.Address.Street}
+                    </td>
+                    <td className="p-3 border border-gray-700">
+                      ${order.TotalOrderPrice}
+                    </td>
+                    <td className="p-3 border border-gray-700">
+                      {order.Status !== "DELIVERED" ? (
+                        <button
+                          onClick={() => handleDeliver(order.OrderId)}
+                          className="bg-green-600 hover:bg-green-500 text-white px-4 py-1 rounded"
+                        >
+                          Deliver
+                        </button>
+                      ) : (
+                        <span className="text-gray-400">Delivered</span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="text-gray-400 text-center p-4">
+            You Didn't Place Any Orders Yet
+          </div>
+        )}
       </div>
-    ) : (
-      <div className="text-gray-400 text-center p-4">
-        You Didn't Place Any Orders Yet
-      </div>
-    )}
-  </div>
-</div>
-
-
+    </div>
   );
 };
 
