@@ -44,26 +44,28 @@ const Categories = ({ sort, title, data, setGameId }) => {
           <Link key={item.ProductId} onClick={()=>setGameId(item.ProductId)}
             to={`/product/${item.ProductId}`}
           >
-            <Card
-              key={item.ProductId}
-              image={item.Images? item.Images[0]:''}
-              title={item.Name}
-              description={item.Description}
-              price={item.Price}
-              platform={item.Platform}
-            />
+          <Card
+            key={item.ProductId}
+            image={item.Images? item.Images[0]:''}
+            title={item.Name}
+            description={item.Description}
+            price={item.Price}
+            platform={item.Platform}
+            category={item.CategoryName}
+          />
           </Link>
         )):sortedData.map((item) => (
           <Link key={item.ProductId} onClick={()=>setGameId(item.ProductId)}
             to={`/product/${item.ProductId}`}
           > 
-            <Card
-              image={item.Images? item.Images[0]:''}
-              title={item.Name}
-              description={item.Description}
-              price={item.Price}
-              platform={item.Platform}
-            />
+          <Card
+            image={item.Images? item.Images[0]:''}
+            title={item.Name}
+            description={item.Description}
+            price={item.Price}
+            platform={item.Platform}
+            category={item.CategoryName}
+          />
           </Link>
           
         ))}
