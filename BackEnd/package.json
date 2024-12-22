@@ -27,6 +27,7 @@
     "multer": "^1.4.5-lts.1",
     "rate-limiter": "^0.2.0",
     "save-dev": "^0.0.1-security",
+    "sharp": "^0.33.5",
     "swagger-ui-express": "^4.1.6",
     "xss-clean": "^0.1.1",
     "yamljs": "^0.3.0"

@@ -2,44 +2,63 @@ const CustomAPIError = require('../errors/custom-error')
 const { StatusCodes } = require('http-status-codes')
 const dbConnect = require('../db/dbconfig')
 const sql = require('mssql');
-// const multer = require('multer');
 
-// const storage = multer.memoryStorage();
-// const upload = multer({ storage });
 
 
 const addGame = async (req, res) => {
-  // Change image to be buffer using mutler library
-  // image has to be in req.file not req.body
-  const { admin } = req.user
-  const { name, brand, desc, rating, price, sq, categoryId, imgs, platform, releaseDate } = req.body
+  const { admin } = req.user;
+  const { name, brand, desc, rating, price, sq, categoryId, platform, releaseDate } = req.body;
+  const imgs = req.files ? req.files.imgs : [];
+
   if (!admin) {
-    throw new CustomAPIError('this user has no access to this route', StatusCodes.UNAUTHORIZED)
+    throw new CustomAPIError('This user has no access to this route', StatusCodes.UNAUTHORIZED);
   }
-  const db = await dbConnect;
-  productId = await db.request()
-    .input('NAME', sql.VarChar, name)
-    .input('Brand', sql.VarChar, brand)
-    .input('Description', sql.VarChar, desc)
-    .input('Rating', sql.Float, rating)
-    .input('Price', sql.Int, price)
-    .input('StockQuantity', sql.Int, sq)
-    .input('CategoryId', sql.Int, categoryId)
-    .input('Platform', sql.VarChar, platform)
-    .input('ReleaseDate', sql.VarChar, releaseDate)
-    .query("INSERT INTO Product VALUES(@NAME, @Brand, @Description, @Rating, @Price, @StockQuantity, @CategoryId, @Platform, @ReleaseDate);SELECT SCOPE_IDENTITY() AS ProductId;");
 
-  imgs.map(async (img)=>{
-    await db.request()
-    .input('ProductId', productId.recordset[0].ProductId)
-    // CHANGE VARCHAR TO VARBINARY
-    .input('Img', sql.VarChar, img)
-    .query("INSERT INTO Product_IMG VALUES(@ProductId, @Img)")
-  })
+  if (!imgs || imgs.length === 0) {
+    throw new CustomAPIError('At least one image is required', StatusCodes.BAD_REQUEST);
+  }
 
+  try {
+    const db = await dbConnect;
 
-  res.status(StatusCodes.OK).send('Game Added Successfully')
-}
+    const categoryQuery = await db.request()
+      .input('CategoryName', sql.VarChar, categoryId)
+      .query("SELECT CategoryId FROM Category WHERE Name = @CategoryName");
+
+    if (categoryQuery.recordset.length === 0) {
+      throw new CustomAPIError('Category not found', StatusCodes.BAD_REQUEST);
+    }
+
+    const categoryIdFromDb = categoryQuery.recordset[0].CategoryId;
+
+    // Insert the game into the Product table
+    const productId = await db.request()
+      .input('Name', sql.VarChar, name)
+      .input('Brand', sql.VarChar, brand)
+      .input('Description', sql.VarChar, desc)
+      .input('Rating', sql.Float, rating)
+      .input('Price', sql.Int, price)
+      .input('StockQuantity', sql.Int, sq)
+      .input('CategoryId', sql.Int, categoryIdFromDb)
+      .input('Platform', sql.VarChar, platform)
+      .input('ReleaseDate', sql.VarChar, releaseDate)
+      .query("INSERT INTO Product (Name, Brand, Description, Rating, Price, StockQuantity, CategoryId, Platform, ReleaseDate) VALUES(@Name, @Brand, @Description, @Rating, @Price, @StockQuantity, @CategoryId, @Platform, @ReleaseDate); SELECT SCOPE_IDENTITY() AS ProductId");
+
+    // Save images to the database
+    for (let img of imgs) {
+      const imgBuffer = img.buffer;  // Get the buffer from the uploaded image
+      await db.request()
+        .input('ProductId', sql.Int, productId.recordset[0].ProductId)
+        .input('Img', sql.VarBinary, imgBuffer)  // Store image as binary in the database
+        .query("INSERT INTO Product_IMG (ProductId, Img) VALUES(@ProductId, @Img)");
+    }
+
+    res.status(StatusCodes.OK).send('Game added successfully');
+  } catch (err) {
+    console.error("Error adding game: ", err);
+    throw new CustomAPIError('Error adding the game to the database', StatusCodes.INTERNAL_SERVER_ERROR);
+  }
+};
 
 
 
@@ -57,20 +76,69 @@ const addCategory = async (req, res) => {
   res.status(StatusCodes.CREATED).send('Category Added Successfully')
 }
 
-const modifyGame = async (req, res) => {
-  const { params: { id }, user: { admin } } = req
-  update = req.body
-  if (!admin) {
-    throw new CustomAPIError('this user has no access to this route', StatusCodes.UNAUTHORIZED)
-  }
-  const db = await dbConnect;
-  await db.request()
-    .input(Object.keys(update)[0], update[Object.keys(update)[0]])
-    .input('ProductId', id)
-    .query(`UPDATE Product SET ${Object.keys(update)[0]} = ${update[Object.keys(update)[0]]} WHERE ProductId = @ProductId`);
 
-  res.status(StatusCodes.OK).send('Game Modified')
-}
+
+const modifyGame = async (req, res) => {
+  const { params: { id }, user: { admin } } = req;
+  const update = req.body; 
+  const files = req.files;
+  if (!admin) {
+    throw new CustomAPIError('this user has no access to this route', StatusCodes.UNAUTHORIZED);
+  }
+
+  const db = await dbConnect;
+
+  // Handle non-file field updates (e.g., CategoryId)
+  if (Object.keys(update)[0] == 'CategoryId') {
+    const CategoryId = await db.request()
+      .input('Name', update[Object.keys(update)[0]])
+      .query(`SELECT CategoryId FROM Category WHERE Name = @Name`);
+    
+    await db.request()
+      .input('CategoryId', CategoryId.recordset[0].CategoryId)
+      .input('ProductId', id)
+      .query(`UPDATE Product SET CategoryId = @CategoryId WHERE ProductId = @ProductId`);
+
+    res.status(StatusCodes.OK).send('Game Modified');
+  
+  } else if (files && files.image0) {  
+    const image = files.image0[0];  
+    const imageBuffer = image.buffer;  
+    if (!imageBuffer) {
+      return res.status(StatusCodes.BAD_REQUEST).send('No image data provided');
+    }
+
+    try {
+      await db.request()
+        .input('ProductId', id)
+        .input('ImageBuffer', sql.VarBinary(sql.MAX), imageBuffer)
+        .query(`
+          UPDATE Product_IMG
+          SET Img = @ImageBuffer
+          WHERE ProductId = @ProductId
+        `);
+
+      res.status(StatusCodes.OK).send('Game Modified');
+
+    } catch (error) {
+      console.error('Error updating image:', error);
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).send('Failed to update image');
+    }
+
+  } else {
+    await db.request()
+      .input(Object.keys(update)[0], update[Object.keys(update)[0]])
+      .input('ProductId', id)
+      .query(`UPDATE Product SET ${Object.keys(update)[0]} = @${Object.keys(update)[0]} WHERE ProductId = @ProductId`);
+
+    res.status(StatusCodes.OK).send('Game Modified');
+  }
+};
+
+
+
+
+
 
 const modifyAdminAccess = async (req, res) => {
   const { params: { id }, user: { admin } } = req
@@ -201,6 +269,82 @@ const placeOrder = async (req, res) => {
   res.status(StatusCodes.CREATED).send('Order Placed Successfully')
 }
 
+
+const getOrders = async (req, res) => {
+  const { user: { customerId, admin } } = req
+  const db = await dbConnect;
+  const orders = await db.request()
+    .input('CustomerId', customerId)
+    .query(`
+      SELECT
+        p.Name AS ProductName,
+        p.Price AS ProductPrice,
+        oi.Price AS TotalOrderPrice,
+        oip.Quantity,
+        o.CustomerId,
+        o.OrderId,
+        o.OrderDate,
+        o.Status
+      FROM TheOrder o
+      INNER JOIN OrderItem oi ON o.OrderId = oi.OrderId
+      INNER JOIN OrderItemProducts oip ON oi.OrderItemId = oip.OrderItemId
+      INNER JOIN Product p ON oip.ProductId = p.ProductId
+      ${admin === 1 ? '': `WHERE o.CustomerId = @CustomerId`}
+    `);
+  
+  const groupedOrders = orders.recordset.reduce((acc, order) => {
+    const { OrderId, ProductName, CustomerId, ProductPrice, TotalOrderPrice, OrderDate, Quantity, Status } = order;
+  
+    const existingOrder = acc.find((group) => group.OrderId === OrderId);
+  
+    if (existingOrder) {
+      existingOrder.Products.push({
+        ProductName,
+        ProductPrice,
+        Quantity
+      });
+    } else {
+      acc.push({
+        OrderId,
+        CustomerId,
+        TotalOrderPrice,
+        OrderDate,
+        Status,
+        Products: [
+          {
+            ProductName,
+            ProductPrice,
+            Quantity
+          }
+        ]
+      });
+    }
+  
+    return acc;
+  }, []);  
+  
+  if (admin){
+    const address = await db.request()
+    .input('CustomerId', customerId)
+    .query('SELECT Country, City, State, Street FROM Customer WHERE CustomerId = @CustomerId')
+    res.status(StatusCodes.OK).send({groupedOrders, address})
+    return
+  }
+
+
+  res.status(StatusCodes.OK).send(groupedOrders)
+}
+
+const updateOrderStatus = async (req, res)=>{
+  const { status, orderId } = req.body
+  const db = await dbConnect;
+  await db.request()
+  .input('OrderId', orderId)
+  .query(`UPDATE TheOrder SET Status = 'DELIVERED' WHERE OrderId = @OrderId`)
+  res.status(StatusCodes.OK).send('Status Has Been Updated Successfully')
+}
+
+
 const addReview = async (req, res) => {
   const {id:productId} = req.params
   const {rating, comment} = req.body
@@ -224,5 +368,7 @@ module.exports = {
   getCartItems,
   deleteCartItem,
   addReview,
-  placeOrder
+  placeOrder,
+  getOrders,
+  updateOrderStatus
 }

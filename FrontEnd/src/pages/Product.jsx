@@ -6,12 +6,17 @@ const Product = () => {
   const [data, setData] = useState("");
   const [quantity, setQuantity] = useState(1);
   const { gameId } = useParams();
+  const [currentImage, setCurrentImage] = useState(""); // state for the main image
 
   useEffect(() => {
     const getData = async () => {
       const url = `http://localhost:3000/api/v1/products/${gameId}`;
       const response = await axios.get(url);
       setData(response.data.game[0]);
+      console.log(response.data.game[0]);
+      if (response.data.game[0]?.Images?.length > 0) {
+        setCurrentImage(response.data.game[0].Images[0]); // set initial image
+      }
     };
     getData();
   }, [gameId]);
@@ -19,6 +24,10 @@ const Product = () => {
   const addToCart = async () => {
     const user = JSON.parse(localStorage.getItem("user"));
     const url = `http://localhost:3000/api/v1/user/cart/${gameId}`;
+    if (!user) {
+      alert("Please Log In");
+      return;
+    }
     try {
       await axios.post(
         url,
@@ -43,35 +52,32 @@ const Product = () => {
         {/* Product Details */}
         <div className="flex-1 ms-10">
           {/* Main Image */}
-          <img
-            src="https://via.placeholder.com/600x300"
-            alt="Product"
-            className="rounded-lg shadow-lg"
-          />
-          <h1 className="text-3xl font-bold mt-4">{data.Name}</h1>
+          <div className="relative mb-6">
+            <img
+
+              src={currentImage}
+              alt="Product"
+              className="rounded-lg shadow-lg w-full h-96 object-cover"
+            />
+          </div>
 
           {/* Smaller Images */}
-          <div className="flex gap-4 mt-6">
-            <img
-              src="https://via.placeholder.com/150x100"
-              alt="Thumbnail 1"
-              className="rounded-lg shadow-lg w-1/5"
-            />
-            <img
-              src="https://via.placeholder.com/150x100"
-              alt="Thumbnail 2"
-              className="rounded-lg shadow-lg w-1/5"
-            />
-            <img
-              src="https://via.placeholder.com/150x100"
-              alt="Thumbnail 3"
-              className="rounded-lg shadow-lg w-1/5"
-            />
+          <div className="grid grid-cols-3 gap-4 mt-4">
+            {data.Images?.map((image, index) => (
+              <img
+
+                key={index}
+                src={image}
+                alt={`Thumbnail ${index + 1}`}
+                className="rounded-lg shadow-lg cursor-pointer hover:scale-105 transition-transform duration-300"
+                onClick={() => setCurrentImage(image)} // Update main image on click
+              />
+            ))}
           </div>
         </div>
 
         {/* Product Info Sidebar */}
-        <div className="bg-gray-800 p-6 rounded-lg shadow-lg max-w-md">
+        <div className="bg-gray-800 p-6 rounded-lg shadow-lg max-w-md w-full">
           <h2 className="text-2xl font-bold mb-4">{data.Name}</h2>
           <p className="text-[rgb(149,171,82)] text-3xl font-bold mb-4">
             {data.Price}$

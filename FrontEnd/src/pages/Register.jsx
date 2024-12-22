@@ -7,14 +7,14 @@ import { Link, useNavigate } from "react-router-dom";
 
 
 
-const Register = ({setUserData}) => {
+const Register = ({ setUserData }) => {
   const navigate = useNavigate()
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     password: '',
     dob: '',
-    phoneNumbers:[''],
+    phoneNumbers: [''],
     confirmPassword: ''
   });
   const [location, setLocation] = useState({
@@ -73,7 +73,7 @@ const Register = ({setUserData}) => {
           const user = await axios.post(url, {
             ...data
           });
-          
+
           localStorage.setItem('user', JSON.stringify(user.data));
           setUserData({
             user: JSON.parse(localStorage.getItem('user')),

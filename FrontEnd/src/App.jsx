@@ -9,6 +9,8 @@ import Login from './pages/Login'
 import Cart from './pages/Cart'
 import Register from './pages/Register'
 import Account from './pages/Account'
+import UpdateProduct from './pages/UpdateProduct'
+import AddProduct from './pages/AddProduct'
 
 
 function App() {
@@ -28,6 +30,8 @@ function App() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/register" element={<Register setUserData={setUserData} />} />
         <Route path="/account" element={<Account />} />
+        <Route path="/update/:gameId" element={<UpdateProduct />} />
+        <Route path="/addProduct" element={<AddProduct />} />
       </Routes>
 
     </>

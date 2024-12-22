@@ -14,7 +14,10 @@ const Products = ({ searchData, setGameId }) => {
     setSortValue("")
     setCategoryValue("")
     const pathSegments = location.pathname.split("/");
-    const currentPlatform = pathSegments[pathSegments.length - 1] || "DefaultPlatform"; // Fallback value
+    let currentPlatform = pathSegments[pathSegments.length - 1] || "DefaultPlatform"; // Fallback value
+    if (currentPlatform === 'NINTENDO%20SWITCH'){
+      currentPlatform = 'NINTENDO SWITCH'
+    }
     setPlatform(currentPlatform);
 
   }, [location.pathname]);

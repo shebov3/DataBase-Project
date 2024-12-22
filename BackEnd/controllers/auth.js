@@ -71,7 +71,7 @@ const register = async (req,res)=>{
     .input('CustomerId', sql.Int, user.recordset[0].CustomerId)  
     .input('Phone', sql.Int, phoneNumber)                      
     .query(`
-      INSERT INTO CPhone 
+      INSERT INTO CPhone
       VALUES (
         @CustomerId,
         @Phone
@@ -81,7 +81,7 @@ const register = async (req,res)=>{
   await db.request()
   .input('CustomerId', sql.Int, user.recordset[0].CustomerId)
   .query("INSERT INTO Cart VALUES (@CustomerId)")
-
+  user.recordset[0] = {...user.recordset[0], phoneNumbers}
   const token = createJWT(user.recordset[0].AdminState, user.recordset[0].CustomerId, user.recordset[0].Name)
   res.status(StatusCodes.CREATED).json({user:user.recordset[0], token})
 }
@@ -91,15 +91,47 @@ const login = async (req,res)=>{
   const db = await dbConnect;
   const user = await db.request()
   .input('Email', sql.NVarChar, email)
-  .query(`SELECT * FROM Customer WHERE Email = @Email`)
+  .query(`
+    SELECT 
+      c.CustomerId,
+      c.Name,
+      c.Email,
+      c.Password,
+      c.Country,
+      c.City,
+      c.Street,
+      c.State,
+      c.AdminState,
+      STRING_AGG(cp.Phone, ',') AS PhoneNumbers
+    FROM 
+      Customer c
+    INNER JOIN 
+      CPhone cp ON c.CustomerId = cp.CustomerId
+    WHERE 
+      c.Email = @Email
+    GROUP BY 
+      c.CustomerId, 
+      c.Name, 
+      c.Email, 
+      c.Password, 
+      c.Country, 
+      c.City, 
+      c.Street, 
+      c.State,
+      c.AdminState
+  `);
 
+  user.recordset[0].PhoneNumbers = user.recordset[0].PhoneNumbers.split(',')
   if(!user){
     throw new CustomAPIError('Email or password wrong', StatusCodes.UNAUTHORIZED)
   }
+  
+
   const passIsMatch = await comparePassword(password, user.recordset[0].Password)
   if(!passIsMatch){
     throw new CustomAPIError('Password doesnt match', StatusCodes.UNAUTHORIZED)
   }
+
   const token = createJWT(user.recordset[0].AdminState, user.recordset[0].CustomerId, user.recordset[0].Name)
   res.status(StatusCodes.OK).json({user:user.recordset[0], token})
 }

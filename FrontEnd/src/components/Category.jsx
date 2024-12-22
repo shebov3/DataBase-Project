@@ -46,7 +46,7 @@ const Categories = ({ sort, title, data, setGameId }) => {
           >
             <Card
               key={item.ProductId}
-              image={'https://via.placeholder.com/600x300'}
+              image={item.Images? item.Images[0]:''}
               title={item.Name}
               description={item.Description}
               price={item.Price}
@@ -58,7 +58,7 @@ const Categories = ({ sort, title, data, setGameId }) => {
             to={`/product/${item.ProductId}`}
           > 
             <Card
-              image={'https://via.placeholder.com/600x300'}
+              image={item.Images? item.Images[0]:''}
               title={item.Name}
               description={item.Description}
               price={item.Price}
